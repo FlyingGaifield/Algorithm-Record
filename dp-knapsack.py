@@ -104,3 +104,51 @@ num = [3,5,1,9,3,5,6,8]
 print("01 knapsack is :", knapsack_01(N, V, cost, value))
 print("complete knapsack is :", knapsack_complete(N, V, cost, value))
 print("multiple knapsack is :", knapsack_multi_1d(N, V, cost, value, num))
+
+
+
+# 补充一道leetcode题目
+# 32. 最长有效括号32. 最长有效括号
+# 给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+# 输入 ")()())"  输出4
+class Solution:
+    def longestValidParentheses1(self, s: str) -> int:
+        # 用动态规划，难想到
+        n = len(s)
+        if n == 0:
+            return 0
+        dp = [0] * n
+        ans = 0
+        for i in range(1,n):
+            # 只处理右括号
+            if s[i] == ')':
+                # 向前寻找对应的左括号
+                pre = i-1 - dp[i-1];
+                if pre>=0 and s[pre] == '(':
+                    dp[i] = dp[i-1] + 2
+                    #为了处理()()这种情况，也是需要将pre-1计算的加进去
+                    if pre>0:
+                        dp[i] += dp[pre-1]
+                ans = max(ans, dp[i])
+        return ans;
+    def longestValidParentheses2(self, s: str) -> int:
+        # 不用动态规划； 用栈记录'(' , ')'的位置信息
+        if not s:
+            return 0
+        ans = 0
+        stack = [-1]
+        for i in range(len(s)):
+            if s[i] == "(":
+                stack.append(i)
+            else:
+                stack.pop()
+                if not stack:
+                    stack.append(i)
+                else:
+                    ans = max(ans, i-stack[-1])
+        return ans
+
+
+
+
+
